@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 use utf8;
+
 #ｕｔｆ８
 # use CGI::Carp qw/fatalsToBrowser/;
 
@@ -16,36 +17,36 @@ use Text::MicroTemplate qw(:all);
 
 use Encode qw(decode_utf8 encode_utf8);
 
-my $q = CGI::Simple->new;
+my $q    = CGI::Simple->new;
 my $file = file('bbs.dat');
 $file->touch;
-my @messages = split /\n/, decode_utf8( $file->slurp );
-my $template = Data::Recursive::Encode->decode_utf8( get_data_section );
+my @messages = split /\n/, decode_utf8($file->slurp);
+my $template = Data::Recursive::Encode->decode_utf8(get_data_section);
 
-if ( $q->request_method eq "POST" ) {
+if ($q->request_method eq "POST") {
   my $msg = $q->param("msg");
-  if ( $msg ne "" ) {
+  if ($msg ne "") {
     unshift @messages, $msg;
     my $fh = $file->openw;
-    $fh->print( join "\n", @messages );
+    $fh->print(join "\n", @messages);
   }
-  print $q->redirect( $q->url );
+  print $q->redirect($q->url);
 }
 else {
-  my $form = render_mt( $template->{'form.mt'} );
-  my $messages = render_mt( $template->{'messages.mt'}, \@messages);
-  my $tx = {
-    title => 'Perl入学式 1行掲示板',
-    form => $form,
+  my $form     = render_mt($template->{'form.mt'});
+  my $messages = render_mt($template->{'messages.mt'}, \@messages);
+  my $tx       = {
+    title    => 'Perl入学式 1行掲示板',
+    form     => $form,
     messages => $messages,
   };
-  my $html = render_mt( $template->{'default.mt'}, $tx);
-  
+  my $html = render_mt($template->{'default.mt'}, $tx);
+
   print $q->header(
-    -type     => 'text/html',
-    -charset  => 'utf-8',
+    -type    => 'text/html',
+    -charset => 'utf-8',
   );
-  print encode_utf8( $html->as_string );
+  print encode_utf8($html->as_string);
 }
 
 __DATA__
