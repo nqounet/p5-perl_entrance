@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/Users/nobu/perl5/perlbrew/perls/perl-5.14.2/bin/perl
 use utf8;
 
 #ｕｔｆ８
